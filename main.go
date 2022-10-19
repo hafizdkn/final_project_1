@@ -24,3 +24,4 @@ func main() {
 	app := handler.NewRouter(todoHandler)
 	app.Run(":8080")
 }
+
