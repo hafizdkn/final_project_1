@@ -25,3 +25,8 @@ func (h *todoHandler) CreateTodo(c *gin.Context) {
 	resp := h.todoService.CreateTodo(input)
 	helper.WriteJsonRespnse(c, resp)
 }
+
+func (h *todoHandler) GetTodos(c *gin.Context) {
+	resp := h.todoService.GetTodos()
+	helper.WriteJsonRespnse(c, resp)
+}

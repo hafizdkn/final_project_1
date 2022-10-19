@@ -8,6 +8,7 @@ import (
 
 type Service interface {
 	CreateTodo(input TodoInput) *helper.Response
+	GetTodos() *helper.Response
 }
 type serivce struct {
 	repository Repository
@@ -22,5 +23,10 @@ func (s *serivce) CreateTodo(input TodoInput) *helper.Response {
 	todo.Task = input.Task
 	todo.CreatedAt = time.Now()
 	resp := s.repository.CreateTodo(todo)
+	return resp
+}
+
+func (s *serivce) GetTodos() *helper.Response {
+	resp := s.repository.GetTodos()
 	return resp
 }

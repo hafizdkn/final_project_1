@@ -14,6 +14,6 @@ func NewRouter(todoHandler *todoHandler) *router {
 
 func (r *router) Run(port string) {
 	r.router.POST("/todos", r.todoHandler.CreateTodo)
-
+	r.router.GET("/todos", r.todoHandler.GetTodos)
 	r.router.Run(port)
 }
