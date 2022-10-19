@@ -60,3 +60,13 @@ func (h *todoHandler) UpdateTodo(c *gin.Context) {
 	resp := h.todoService.UpdateTodo(id, t)
 	helper.WriteJsonRespnse(c, resp)
 }
+
+func (h *todoHandler) DeleteTodo(c *gin.Context) {
+	id, err := strconv.Atoi(c.Param("id"))
+	if err != nil {
+		helper.WriteJsonRespnse(c, helper.BadRequestResponse(err))
+	}
+
+	resp := h.todoService.DeleteTodo(id)
+	helper.WriteJsonRespnse(c, resp)
+}

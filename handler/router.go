@@ -17,6 +17,7 @@ func (r *router) Run(port string) {
 	r.router.GET("/todos", r.todoHandler.GetTodos)
 	r.router.GET("/todos/:id", r.todoHandler.GetTodoByid)
 	r.router.PUT("/todos/:id", r.todoHandler.UpdateTodo)
+	r.router.DELETE("/todos/:id", r.todoHandler.DeleteTodo)
 
 	r.router.Run(port)
 }

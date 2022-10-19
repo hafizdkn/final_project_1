@@ -11,6 +11,7 @@ type Service interface {
 	GetTodos() *helper.Response
 	GetTodoByid(id int) *helper.Response
 	UpdateTodo(id int, input TodoUpdateInput) *helper.Response
+	DeleteTodo(id int) *helper.Response
 }
 type serivce struct {
 	repository Repository
@@ -47,5 +48,10 @@ func (s *serivce) UpdateTodo(id int, input TodoUpdateInput) *helper.Response {
 	t.UpdatedAt = time.Now()
 
 	resp := s.repository.UpdateTodo(t)
+	return resp
+}
+
+func (s *serivce) DeleteTodo(id int) *helper.Response {
+	resp := s.repository.DeleteTodo(id)
 	return resp
 }
