@@ -9,6 +9,7 @@ import (
 type Service interface {
 	CreateTodo(input TodoInput) *helper.Response
 	GetTodos() *helper.Response
+	GetTodoByid(id int) *helper.Response
 }
 type serivce struct {
 	repository Repository
@@ -28,5 +29,10 @@ func (s *serivce) CreateTodo(input TodoInput) *helper.Response {
 
 func (s *serivce) GetTodos() *helper.Response {
 	resp := s.repository.GetTodos()
+	return resp
+}
+
+func (s *serivce) GetTodoByid(id int) *helper.Response {
+	resp := s.repository.GetTodoByid(id)
 	return resp
 }

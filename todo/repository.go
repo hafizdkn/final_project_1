@@ -9,6 +9,7 @@ import (
 type Repository interface {
 	CreateTodo(todo Todo) *helper.Response
 	GetTodos() *helper.Response
+	GetTodoByid(id int) *helper.Response
 }
 
 type repository struct {
@@ -35,4 +36,15 @@ func (r *repository) GetTodos() *helper.Response {
 		return helper.InternalServerError(err)
 	}
 	return helper.SuccessResponse(t, "Success get all todo task")
+}
+
+func (r *repository) GetTodoByid(id int) *helper.Response {
+	var t Todo
+
+	t.Id = id
+	err := r.db.Debug().First(&t).Error
+	if err != nil {
+		return helper.InternalServerError(err)
+	}
+	return helper.SuccessResponse(t, "Success get todo")
 }

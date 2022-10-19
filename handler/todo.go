@@ -1,6 +1,8 @@
 package handler
 
 import (
+	"strconv"
+
 	"github.com/gin-gonic/gin"
 
 	"final_project_1/helper"
@@ -28,5 +30,15 @@ func (h *todoHandler) CreateTodo(c *gin.Context) {
 
 func (h *todoHandler) GetTodos(c *gin.Context) {
 	resp := h.todoService.GetTodos()
+	helper.WriteJsonRespnse(c, resp)
+}
+
+func (h *todoHandler) GetTodoByid(c *gin.Context) {
+	id, err := strconv.Atoi(c.Param("id"))
+	if err != nil {
+		helper.WriteJsonRespnse(c, helper.BadRequestResponse(err))
+		return
+	}
+	resp := h.todoService.GetTodoByid(id)
 	helper.WriteJsonRespnse(c, resp)
 }
