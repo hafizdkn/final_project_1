@@ -7,6 +7,6 @@ type Todo struct {
 	Task      string
 	Completed bool
 	CreatedAt time.Time
-	UpdateAt  time.Time
+	UpdatedAt time.Time
 	DeletedAt time.Time
 }
