@@ -10,6 +10,7 @@ type Service interface {
 	CreateTodo(input TodoInput) *helper.Response
 	GetTodos() *helper.Response
 	GetTodoByid(id int) *helper.Response
+	UpdateTodo(id int, input TodoUpdateInput) *helper.Response
 }
 type serivce struct {
 	repository Repository
@@ -34,5 +35,17 @@ func (s *serivce) GetTodos() *helper.Response {
 
 func (s *serivce) GetTodoByid(id int) *helper.Response {
 	resp := s.repository.GetTodoByid(id)
+	return resp
+}
+
+func (s *serivce) UpdateTodo(id int, input TodoUpdateInput) *helper.Response {
+	var t Todo
+
+	t.Id = id
+	t.Task = input.Task
+	t.Completed = input.Completed
+	t.UpdatedAt = time.Now()
+
+	resp := s.repository.UpdateTodo(t)
 	return resp
 }

@@ -42,3 +42,21 @@ func (h *todoHandler) GetTodoByid(c *gin.Context) {
 	resp := h.todoService.GetTodoByid(id)
 	helper.WriteJsonRespnse(c, resp)
 }
+
+func (h *todoHandler) UpdateTodo(c *gin.Context) {
+	var t todo.TodoUpdateInput
+	id, err := strconv.Atoi(c.Param("id"))
+	if err != nil {
+		helper.WriteJsonRespnse(c, helper.BadRequestResponse(err))
+		return
+	}
+
+	err = c.ShouldBindJSON(&t)
+	if err != nil {
+		helper.WriteJsonRespnse(c, helper.BadRequestResponse(err))
+		return
+	}
+
+	resp := h.todoService.UpdateTodo(id, t)
+	helper.WriteJsonRespnse(c, resp)
+}
