@@ -52,6 +52,10 @@ func (r *repository) GetTodoByid(id int) *helper.Response {
 }
 
 func (r *repository) UpdateTodo(todo Todo) *helper.Response {
+	if err := r.checkFirstRecord(Todo{Id: todo.Id}); err != nil {
+		return helper.InternalServerError(err)
+	}
+
 	err := r.db.Debug().Updates(&todo).Error
 	if err != nil {
 		return helper.InternalServerError(err)
