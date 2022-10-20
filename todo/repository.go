@@ -27,7 +27,9 @@ func (r *repository) CreateTodo(todo Todo) *helper.Response {
 	if err != nil {
 		return helper.InternalServerError(err)
 	}
-	return helper.SuccessCreateResponse(todo, "Succes create todo task")
+
+	todoFormatter := TodoFormatter(todo)
+	return helper.SuccessCreateResponse(todoFormatter, "Success create todo task")
 }
 
 func (r *repository) GetTodos() *helper.Response {
@@ -37,7 +39,9 @@ func (r *repository) GetTodos() *helper.Response {
 	if err != nil {
 		return helper.InternalServerError(err)
 	}
-	return helper.SuccessResponse(t, "Success get all todo task")
+
+	todoFormatter := TodoFormatter(t)
+	return helper.SuccessResponse(todoFormatter, "Success get all todo task")
 }
 
 func (r *repository) GetTodoByid(id int) *helper.Response {
@@ -48,7 +52,9 @@ func (r *repository) GetTodoByid(id int) *helper.Response {
 	if err != nil {
 		return helper.InternalServerError(err)
 	}
-	return helper.SuccessResponse(t, "Success get todo")
+
+	todoFormatter := TodoFormatter(t)
+	return helper.SuccessResponse(todoFormatter, "Success get todo")
 }
 
 func (r *repository) UpdateTodo(todo Todo) *helper.Response {
@@ -60,7 +66,9 @@ func (r *repository) UpdateTodo(todo Todo) *helper.Response {
 	if err != nil {
 		return helper.InternalServerError(err)
 	}
-	return helper.SuccessResponse(todo, "Success update todo")
+
+	todoFormatter := TodoFormatter(todo)
+	return helper.SuccessResponse(todoFormatter, "Success update todo")
 }
 
 func (r *repository) DeleteTodo(id int) *helper.Response {
