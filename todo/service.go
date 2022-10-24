@@ -1,6 +1,7 @@
 package todo
 
 import (
+	"errors"
 	"time"
 
 	"final_project_1/helper"
@@ -22,36 +23,72 @@ func NewService(repository Repository) *serivce {
 }
 
 func (s *serivce) CreateTodo(input TodoInput) *helper.Response {
-	var todo Todo
-	todo.Task = input.Task
-	todo.CreatedAt = time.Now()
-	resp := s.repository.CreateTodo(todo)
-	return resp
+	var t Todo
+	t.Task = input.Task
+	t.CreatedAt = time.Now()
+
+	todo, err := s.repository.CreateTodo(t)
+	if err != nil {
+		return helper.InternalServerError(err)
+	}
+
+	todoFormatter := TodoFormatter(todo)
+	return helper.SuccessCreateResponse(todoFormatter, "Success create todo task")
 }
 
 func (s *serivce) GetTodos() *helper.Response {
-	resp := s.repository.GetTodos()
-	return resp
+	todos, err := s.repository.GetTodos()
+	if err != nil {
+		return helper.InternalServerError(err)
+	}
+
+	todoFormatter := TodoFormatter(todos)
+	return helper.SuccessResponse(todoFormatter, "Success get all todo task")
 }
 
 func (s *serivce) GetTodoByid(id int) *helper.Response {
-	resp := s.repository.GetTodoByid(id)
-	return resp
+	if id == 0 {
+		return helper.BadRequestResponse(errors.New("cant find data, try again"))
+	}
+
+	todo, err := s.repository.GetTodoByid(id)
+	if err != nil {
+		return helper.InternalServerError(err)
+	}
+
+	todoFormatter := TodoFormatter(todo)
+	return helper.SuccessResponse(todoFormatter, "Success get todo tas")
 }
 
 func (s *serivce) UpdateTodo(id int, input TodoUpdateInput) *helper.Response {
-	var t Todo
+	if id == 0 {
+		return helper.BadRequestResponse(errors.New("cant find data, try again"))
+	}
 
+	var t Todo
 	t.Id = id
 	t.Task = input.Task
 	t.Completed = input.Completed
 	t.UpdatedAt = time.Now()
 
-	resp := s.repository.UpdateTodo(t)
-	return resp
+	todo, err := s.repository.UpdateTodo(t)
+	if err != nil {
+		return helper.InternalServerError(err)
+	}
+
+	todoFormatter := TodoFormatter(todo)
+	return helper.SuccessResponse(todoFormatter, "Success update todo task")
 }
 
 func (s *serivce) DeleteTodo(id int) *helper.Response {
-	resp := s.repository.DeleteTodo(id)
-	return resp
+	if id == 0 {
+		return helper.BadRequestResponse(errors.New("cant find data, try again"))
+	}
+
+	err := s.repository.DeleteTodo(id)
+	if err != nil {
+		return helper.InternalServerError(err)
+	}
+
+	return helper.SuccessResponse(nil, "Success delete todo task")
 }
