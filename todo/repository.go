@@ -2,16 +2,14 @@ package todo
 
 import (
 	"gorm.io/gorm"
-
-	"final_project_1/helper"
 )
 
 type Repository interface {
-	CreateTodo(todo Todo) *helper.Response
-	GetTodos() *helper.Response
-	GetTodoByid(id int) *helper.Response
-	UpdateTodo(Todo Todo) *helper.Response
-	DeleteTodo(id int) *helper.Response
+	CreateTodo(todo Todo) (Todo, error)
+	GetTodos() ([]Todo, error)
+	GetTodoByid(id int) (Todo, error)
+	UpdateTodo(Todo Todo) (Todo, error)
+	DeleteTodo(id int) error
 }
 
 type repository struct {
@@ -22,71 +20,62 @@ func NewRepository(db *gorm.DB) *repository {
 	return &repository{db}
 }
 
-func (r *repository) CreateTodo(todo Todo) *helper.Response {
+func (r *repository) CreateTodo(todo Todo) (Todo, error) {
 	err := r.db.Debug().Create(&todo).Error
 	if err != nil {
-		return helper.InternalServerError(err)
+		return todo, nil
 	}
 
-	todoFormatter := TodoFormatter(todo)
-	return helper.SuccessCreateResponse(todoFormatter, "Success create todo task")
+	return todo, nil
 }
 
-func (r *repository) GetTodos() *helper.Response {
+func (r *repository) GetTodos() ([]Todo, error) {
 	t := make([]Todo, 0)
 
 	err := r.db.Debug().Find(&t).Error
 	if err != nil {
-		return helper.InternalServerError(err)
+		return t, err
 	}
 
-	todoFormatter := TodoFormatter(t)
-	return helper.SuccessResponse(todoFormatter, "Success get all todo task")
+	return t, nil
 }
 
-func (r *repository) GetTodoByid(id int) *helper.Response {
+func (r *repository) GetTodoByid(id int) (Todo, error) {
 	var t Todo
 
-	t.Id = id
-	err := r.db.Debug().First(&t).Error
+	err := r.db.Debug().Where("id=?", id).First(&t).Error
 	if err != nil {
-		return helper.InternalServerError(err)
+		return t, err
 	}
 
-	todoFormatter := TodoFormatter(t)
-	return helper.SuccessResponse(todoFormatter, "Success get todo")
+	return t, nil
 }
 
-func (r *repository) UpdateTodo(todo Todo) *helper.Response {
-	if err := r.checkFirstRecord(Todo{Id: todo.Id}); err != nil {
-		return helper.InternalServerError(err)
-	}
-
-	err := r.db.Debug().Updates(&todo).Error
+func (r *repository) UpdateTodo(todo Todo) (Todo, error) {
+	todoId := todo.Id
+	_, err := r.GetTodoByid(todoId)
 	if err != nil {
-		return helper.InternalServerError(err)
+		return todo, err
 	}
 
-	todoFormatter := TodoFormatter(todo)
-	return helper.SuccessResponse(todoFormatter, "Success update todo")
+	err = r.db.Debug().Updates(&todo).Error
+	if err != nil {
+		return todo, err
+	}
+
+	return r.GetTodoByid(todoId)
 }
 
-func (r *repository) DeleteTodo(id int) *helper.Response {
-	if err := r.checkFirstRecord(Todo{Id: id}); err != nil {
-		return helper.InternalServerError(err)
-	}
-
-	err := r.db.Debug().Delete(&Todo{}, id).Error
-	if err != nil {
-		return helper.InternalServerError(err)
-	}
-	return helper.SuccessResponse(nil, "Success delete todo")
-}
-
-func (r *repository) checkFirstRecord(todo Todo) error {
-	err := r.db.Debug().First(&todo).Error
+func (r *repository) DeleteTodo(id int) error {
+	_, err := r.GetTodoByid(id)
 	if err != nil {
 		return err
 	}
+
+	err = r.db.Debug().Delete(&Todo{}, id).Error
+	if err != nil {
+		return err
+	}
+
 	return nil
 }
