@@ -5,11 +5,11 @@ import (
 )
 
 type Formatter struct {
-	Id        int       `json:"id"`
-	Task      string    `json:"task"`
-	Completed bool      `json:"completed"`
-	CreatedAt time.Time `json:"created_at,omitempty"`
-	UpdatedAt time.Time `json:"updated_at,omitempty"`
+	Id        int       `json:"id" example:"1"`
+	Task      string    `json:"task" example:"push up 1 sets"`
+	Completed bool      `json:"completed" example:"false"`
+	CreatedAt time.Time `json:"created_at,omitempty" example:"2022-10-25T17:50:24.701221716+07:00"`
+	UpdatedAt time.Time `json:"updated_at,omitempty" example:"2022-10-25T17:50:24.701221716+07:00"`
 }
 
 func TodoFormatter(todo interface{}) interface{} {

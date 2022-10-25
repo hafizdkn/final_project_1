@@ -1,6 +1,12 @@
 package handler
 
-import "github.com/gin-gonic/gin"
+import (
+	"final_project_1/docs"
+
+	"github.com/gin-gonic/gin"
+	swaggerFiles "github.com/swaggo/files"
+	ginSwagger "github.com/swaggo/gin-swagger"
+)
 
 type router struct {
 	router      *gin.Engine
@@ -13,6 +19,14 @@ func NewRouter(todoHandler *todoHandler) *router {
 }
 
 func (r *router) Run(port string) {
+	docs.SwaggerInfo.Title = "Todo API"
+	docs.SwaggerInfo.Description = "This is a sample Todo server."
+	docs.SwaggerInfo.Version = "1.0"
+	docs.SwaggerInfo.Host = "todo.swagger.io"
+	docs.SwaggerInfo.BasePath = "/v2"
+	docs.SwaggerInfo.Schemes = []string{"http"}
+
+	r.router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 	r.router.POST("/todos", r.todoHandler.CreateTodo)
 	r.router.GET("/todos", r.todoHandler.GetTodos)
 	r.router.GET("/todos/:id", r.todoHandler.GetTodoByid)
