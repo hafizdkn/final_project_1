@@ -10,14 +10,14 @@
 1. Aminudin Fadila :x:
 
 2. RAUNG KAWIJAYAN (GLNG-KS04-018)
-- Setup Project
 - POST
 - GET
+- DELETE 
 
 3. HAFIZD KURNIAWAN (GLNG-KS04-019)
+- Setup Project 
 - PUT 
 - GET ALL  
-- DELETE
 - Dokumentasi tiap endpoint yang dikerjakan
 
 ## Menjalankan
