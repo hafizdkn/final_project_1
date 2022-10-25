@@ -9,8 +9,6 @@
 ## Pembagian Tugas
 1. Aminudin Fadila :x:
 
-- Dokumentasi tiap endpoint yang dikerjakan
-
 2. RAUNG KAWIJAYAN (GLNG-KS04-018)
 - Setup Project
 - POST
